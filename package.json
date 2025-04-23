@@ -1,4 +1,18 @@
 {
+  "name": "gensite-backend",
+  "version": "0.1.0",
+  "description": "생성형 AI 웹 사이트 서버",
+  "main": "server.js",
+  "scripts": {
+    "dev": "NODE_ENV=development node server.js",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/gliburch/gensite-backend.git"
+  },
+  "author": "Kim Han-sol <studio.gliburch@gmail.com>",
+  "devDependencies": {},
   "dependencies": {
     "fastify": "^5.3.2"
   }
