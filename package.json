@@ -5,7 +5,7 @@
   "description": "생성형 AI 웹 사이트 서버",
   "main": "server.js",
   "scripts": {
-    "dev": "NODE_ENV=development node server.js",
+    "dev": "NODE_ENV=development nodemon server.js",
     "start": "node server.js"
   },
   "repository": {
