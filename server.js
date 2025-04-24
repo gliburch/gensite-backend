@@ -105,7 +105,7 @@ if (process.env.NODE_ENV === 'development') {
   }
 }
 
-// Export for serverless use (e.g. Vercel)
+// Export for serverless use
 export default async (req, res) => {
   await fastify.ready()
   fastify.server.emit('request', req, res)
