@@ -15,6 +15,9 @@
   "author": "Kim Han-sol <studio.gliburch@gmail.com>",
   "devDependencies": {},
   "dependencies": {
-    "fastify": "^5.3.2"
+    "dotenv": "^16.4.5",
+    "fastify": "^5.3.2",
+    "@fastify/cors": "^11.0.0",
+    "@anthropic-ai/sdk": "^0.17.1"
   }
 }
