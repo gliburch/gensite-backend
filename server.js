@@ -23,7 +23,7 @@ await fastify.register(cors, {
     ? true // Allow all origins in development 
     : process.env.CORS_ORIGIN.split(','), // Restrict in production
   methods: ['GET', 'POST', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'X-Api-Key', 'Authorization'],
+  allowedHeaders: ['Content-Type'],
   credentials: true,
   preflight: true,
   preflightContinue: true
