@@ -5,8 +5,13 @@ import Fastify from 'fastify'
 import Anthropic from '@anthropic-ai/sdk'
 import cors from '@fastify/cors'
 
+// Import AI configurations
 import luckyBeach from './ai.lucky-beach.js'
-// import mbtiCounsel from './ai.mbti-counsel.js'
+import mbtiCounsel from './ai.mbti-counsel.js'
+const AI_CONFIGS = {
+  'lucky-beach': luckyBeach,
+  'mbti-counsel': mbtiCounsel,
+}
 
 const fastify = Fastify({
   logger: true
@@ -38,7 +43,16 @@ fastify.get('/', async function handler (request, reply) {
   return { hello: 'world' }
 })
 
-fastify.post('/lucky-beach/messages', async function handler (request, reply) {
+// Generic message handler for all AI configurations
+fastify.post('/:aiName/messages', async function handler (request, reply) {
+  const { aiName } = request.params
+  const aiConfig = AI_CONFIGS[aiName]
+
+  if (!aiConfig) {
+    reply.code(404).send({ error: `AI configuration '${aiName}' not found` })
+    return
+  }
+
   const { messages } = request.body
 
   if (!messages || !Array.isArray(messages)) {
@@ -58,7 +72,7 @@ fastify.post('/lucky-beach/messages', async function handler (request, reply) {
   })
 
   try {
-    const { model, temperature, max_tokens, stream, system } = luckyBeach
+    const { model, temperature, max_tokens, stream, system } = aiConfig
     const anthropicConfig = { model, temperature, max_tokens, stream, system }
     const responseStream = await anthropic.messages.create({
       ...anthropicConfig,
