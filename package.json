@@ -1,10 +1,11 @@
 {
   "name": "gensite-backend",
-  "version": "0.1.0",
-  "type": "module",
   "description": "생성형 AI 웹 사이트 서버",
+  "version": "0.1.0",
+  "author": "Kim Han-sol <studio.gliburch@gmail.com>",
   "main": "server.js",
   "scripts": {
+    "embed": "node scripts/embed-documents.js",
     "dev": "NODE_ENV=development nodemon server.js",
     "start": "node server.js"
   },
@@ -12,12 +13,16 @@
     "type": "git",
     "url": "git+ssh://git@github.com/gliburch/gensite-backend.git"
   },
-  "author": "Kim Han-sol <studio.gliburch@gmail.com>",
-  "devDependencies": {},
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.17.1",
+    "@fastify/cors": "^9.0.1",
     "dotenv": "^16.4.5",
     "fastify": "^5.3.2",
-    "@fastify/cors": "^11.0.0",
-    "@anthropic-ai/sdk": "^0.17.1"
-  }
+    "mongodb": "^6.3.0",
+    "voyageai": "^0.0.4"
+  },
+  "type": "module"
 }
