@@ -4,13 +4,102 @@ dotenv.config()
 import Fastify from 'fastify'
 import Anthropic from '@anthropic-ai/sdk'
 import cors from '@fastify/cors'
+import mongoose from 'mongoose'
+import { VoyageAIClient } from 'voyageai'
+import Vector from './models/Vector.js'
 
 // Import AI configurations
 import luckyBeach from './ai.lucky-beach.js'
 import mbtiCounsel from './ai.mbti-counsel.js'
+
 const AI_CONFIGS = {
-  'lucky-beach': luckyBeach,
-  'mbti-counsel': mbtiCounsel,
+  'lucky-beach': luckyBeach.CONFIG,
+  'mbti-counsel': mbtiCounsel.CONFIG,
+}
+
+const AI_EMBEDDINGS = {
+  'lucky-beach': luckyBeach.EMBEDDING,
+  'mbti-counsel': mbtiCounsel.EMBEDDING,
+}
+
+// Initialize Voyage AI client
+const voyage = new VoyageAIClient({
+  apiKey: process.env.VOYAGE_API_KEY
+})
+
+// Connect to MongoDB with Mongoose
+async function connectToMongoose() {
+  try {
+    await mongoose.connect(process.env.MONGODB_URI, {
+      dbName: 'lucky-beach'
+    })
+    console.log('Connected to MongoDB with Mongoose')
+    return true
+  } catch (error) {
+    console.error('Failed to connect to MongoDB with Mongoose:', error)
+    return false
+  }
+}
+
+// Connect to MongoDB on startup
+connectToMongoose()
+
+// Vector search function
+async function searchVectorDB(query, aiName, limit = 3) {
+  try {
+    // Get last message text from query
+    const lastMessage = query[query.length - 1]
+    if (!lastMessage || !lastMessage.content || lastMessage.role !== 'user') {
+      return []
+    }
+    
+    const userMessage = lastMessage.content
+    
+    // 쿼리 임베딩 - Query embedding using Voyage AI
+    const embedResponse = await voyage.embed({
+      model: 'voyage-3',
+      input: [userMessage]
+    })
+    
+    const queryEmbd = embedResponse.data[0].embedding
+    
+    // Get all documents from MongoDB
+    const documents = await Vector.find({}, { text: 1, embedding: 1, _id: 0 }).lean()
+    
+    // Calculate cosine similarities
+    const similarities = []
+    for (const doc of documents) {
+      // Calculate dot product
+      let dotProduct = 0
+      let magnitudeA = 0
+      let magnitudeB = 0
+      
+      for (let i = 0; i < queryEmbd.length; i++) {
+        dotProduct += queryEmbd[i] * doc.embedding[i]
+        magnitudeA += queryEmbd[i] * queryEmbd[i]
+        magnitudeB += doc.embedding[i] * doc.embedding[i]
+      }
+      
+      magnitudeA = Math.sqrt(magnitudeA)
+      magnitudeB = Math.sqrt(magnitudeB)
+      
+      const similarity = dotProduct / (magnitudeA * magnitudeB)
+      
+      similarities.push({
+        text: doc.text,
+        score: similarity
+      })
+    }
+    
+    // Sort by similarity (highest first)
+    similarities.sort((a, b) => b.score - a.score)
+    
+    // Return top results
+    return similarities.slice(0, limit)
+  } catch (error) {
+    console.error('Error searching vector DB:', error)
+    return []
+  }
 }
 
 const fastify = Fastify({
@@ -47,6 +136,7 @@ fastify.get('/', async function handler (request, reply) {
 fastify.post('/:aiName/messages', async function handler (request, reply) {
   const { aiName } = request.params
   const aiConfig = AI_CONFIGS[aiName]
+  const { MODEL, TEMPERATURE, MAX_TOKENS, SYSTEM, STREAM } = aiConfig
 
   if (!aiConfig) {
     reply.code(404).send({ error: `AI configuration '${aiName}' not found` })
@@ -72,10 +162,32 @@ fastify.post('/:aiName/messages', async function handler (request, reply) {
   })
 
   try {
-    const { model, temperature, max_tokens, stream, system } = aiConfig
-    const anthropicConfig = { model, temperature, max_tokens, stream, system }
+    // Search for relevant context in vector DB
+    const relevantDocs = await searchVectorDB(messages, aiName)
+    
+    // Extract the base system prompt
+    const baseSystemPrompt = SYSTEM
+    
+    // Add relevant context to system prompt if available
+    let enhancedSystemPrompt = baseSystemPrompt
+    if (relevantDocs.length > 0) {
+      const contextSection = relevantDocs.map(doc => doc.text).join('\n\n')
+      
+      enhancedSystemPrompt = `
+${baseSystemPrompt}
+
+The following information is relevant to the conversation. When answering the user, incorporate this information naturally without explicitly mentioning that it comes from a knowledge base:
+
+${contextSection}
+      `.trim()
+    }
+    
     const responseStream = await anthropic.messages.create({
-      ...anthropicConfig,
+      model: MODEL, 
+      temperature: TEMPERATURE, 
+      max_tokens: MAX_TOKENS, 
+      stream: STREAM, 
+      system: enhancedSystemPrompt,
       messages: messages
     })
 
@@ -118,6 +230,16 @@ if (process.env.NODE_ENV === 'development') {
     process.exit(1)
   }
 }
+
+// Ensure clean shutdown
+process.on('SIGINT', async () => {
+  console.log('Shutting down...')
+  if (mongoose.connection.readyState === 1) {
+    await mongoose.disconnect()
+    console.log('MongoDB connection closed')
+  }
+  process.exit(0)
+})
 
 // Export for serverless use
 export default async (req, res) => {

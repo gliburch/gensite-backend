@@ -5,7 +5,7 @@
   "author": "Kim Han-sol <studio.gliburch@gmail.com>",
   "main": "server.js",
   "scripts": {
-    "embed": "node scripts/embed-documents.js",
+    "embed": "AI=lucky-beach node scripts/embed-documents.js",
     "dev": "NODE_ENV=development nodemon server.js",
     "start": "node server.js"
   },
@@ -21,8 +21,9 @@
     "@fastify/cors": "^11.0.0",
     "dotenv": "^16.4.5",
     "fastify": "^5.3.2",
-    "mongodb": "^6.3.0",
-    "voyageai": "^0.0.4"
+    "mongoose": "^8.14.0",
+    "voyageai": "^0.0.4",
+    "ml-matrix": "^6.10.4"
   },
   "type": "module"
 }

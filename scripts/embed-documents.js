@@ -1,22 +1,33 @@
 import * as dotenv from 'dotenv';
 dotenv.config();
 
-import { MongoClient } from 'mongodb';
+import mongoose from 'mongoose';
 import { VoyageAIClient } from 'voyageai';
 import fs from 'fs/promises';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import Vector from '../models/Vector.js';
 
 // Get directory name for ES module
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+// Import AI configurations
+import luckyBeach from '../ai.lucky-beach.js'
+import mbtiCounsel from '../ai.mbti-counsel.js'
+
+const AI_EMBEDDINGS = {
+  'lucky-beach': luckyBeach.EMBEDDING,
+  'mbti-counsel': mbtiCounsel.EMBEDDING,
+}
+const embeddingModel = AI_EMBEDDINGS[process.env.AI].MODEL;
+const embeddingDocuments = AI_EMBEDDINGS[process.env.AI].DOCUMENTS;
+
 // Configuration
 const MONGODB_URI = process.env.MONGODB_URI;
-const MONGODB_DB = 'lucky-beach';
-const MONGODB_COLLECTION = 'vectors';
+const MONGODB_DB = process.env.AI;
 const VOYAGE_API_KEY = process.env.VOYAGE_API_KEY;
-const VOYAGE_MODEL = 'voyage-3';
+const VOYAGE_MODEL = embeddingModel;
 const BATCH_SIZE = 10; // Number of documents to embed in a single API call
 
 // Make sure we have necessary environment variables
@@ -35,15 +46,16 @@ const voyage = new VoyageAIClient({
   apiKey: VOYAGE_API_KEY
 });
 
-// Connect to MongoDB
-async function connectToMongoDB() {
+// Connect to MongoDB with Mongoose
+async function connectToMongoose() {
   try {
-    const client = new MongoClient(MONGODB_URI);
-    await client.connect();
-    console.log('Connected to MongoDB');
-    return client;
+    await mongoose.connect(MONGODB_URI, {
+      dbName: MONGODB_DB
+    });
+    console.log('Connected to MongoDB with Mongoose');
+    return true;
   } catch (error) {
-    console.error('Failed to connect to MongoDB:', error);
+    console.error('Failed to connect to MongoDB with Mongoose:', error);
     throw error;
   }
 }
@@ -57,6 +69,7 @@ async function generateEmbeddings(texts) {
       model: VOYAGE_MODEL,
       input: texts
     });
+    
     return response.data.map(item => item.embedding);
   } catch (error) {
     console.error('Error generating embeddings:', error);
@@ -65,8 +78,7 @@ async function generateEmbeddings(texts) {
 }
 
 // Process documents in batches
-async function processBatch(documents, db) {
-  const collection = db.collection(MONGODB_COLLECTION);
+async function processBatch(documents) {
   const batches = [];
   
   // Split documents into batches
@@ -95,11 +107,9 @@ async function processBatch(documents, db) {
         createdAt: new Date(),
         updatedAt: new Date()
       }));
-
-      console.log({embeddedDocs});
       
-      // Store in MongoDB
-      await collection.insertMany(embeddedDocs);
+      // Store in MongoDB using Mongoose
+      await Vector.insertMany(embeddedDocs);
       
       processedCount += batch.length;
       console.log(`Processed ${processedCount}/${documents.length} documents`);
@@ -119,8 +129,6 @@ async function processBatch(documents, db) {
 
 // Main function
 async function main() {
-  let mongoClient;
-  
   try {
     // Import AI configuration with documents
     const aiModulePath = path.resolve(__dirname, '../ai.lucky-beach.js');
@@ -133,33 +141,23 @@ async function main() {
       process.exit(1);
     }
     
-    // Import module
-    const aiModule = await import(aiModulePath);
-    const config = aiModule.default;
-    
-    if (!config || !config.documents || !Array.isArray(config.documents)) {
-      console.error('No valid documents array found in ai.lucky-beach.js');
-      return;
-    }
-    
-    const documents = config.documents;
+    const documents = embeddingDocuments;
     
     console.log(`Found ${documents.length} documents to process`);
     
     // Connect to MongoDB
-    mongoClient = await connectToMongoDB();
-    const db = mongoClient.db(MONGODB_DB);
+    await connectToMongoose();
     
     // Process documents
-    const processedCount = await processBatch(documents, db);
+    const processedCount = await processBatch(documents);
     
     console.log(`Successfully processed ${processedCount} documents`);
   } catch (error) {
     console.error('Error in main process:', error);
   } finally {
     // Close MongoDB connection
-    if (mongoClient) {
-      await mongoClient.close();
+    if (mongoose.connection.readyState === 1) {
+      await mongoose.disconnect();
       console.log('MongoDB connection closed');
     }
   }
