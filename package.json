@@ -1,7 +1,7 @@
 {
   "name": "gensite-backend",
   "description": "생성형 AI 웹 사이트 서버",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "author": "Kim Han-sol <studio.gliburch@gmail.com>",
   "main": "server.js",
   "scripts": {
