@@ -164,6 +164,7 @@ fastify.post('/:aiName/messages', async function handler (request, reply) {
   try {
     // Search for relevant context in vector DB
     const relevantDocs = await searchVectorDB(messages, aiName)
+    if (process.env.NODE_ENV === 'development') console.log({relevantDocs})
     
     // Extract the base system prompt
     const baseSystemPrompt = SYSTEM
