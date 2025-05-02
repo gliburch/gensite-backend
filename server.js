@@ -17,12 +17,6 @@ const AI_CONFIGS = {
   'mbti-counsel': mbtiCounsel.CONFIG,
 }
 
-const AI_EMBEDDINGS = {
-  'lucky-beach': luckyBeach.EMBEDDING,
-  'mbti-counsel': mbtiCounsel.EMBEDDING,
-}
-
-// Initialize Voyage AI client
 const voyage = new VoyageAIClient({
   apiKey: process.env.VOYAGE_API_KEY
 })
