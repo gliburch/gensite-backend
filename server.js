@@ -11,10 +11,14 @@ import Vector from './models/Vector.js'
 // Import AI configurations
 import luckyBeach from './ai.lucky-beach.js'
 import mbtiCounsel from './ai.mbti-counsel.js'
+import theMinjooParty from './ai.the-minjoo-party.js'
+import reformParty from './ai.reform-party.js'
 
 const AI_CONFIGS = {
   'lucky-beach': luckyBeach.CONFIG,
   'mbti-counsel': mbtiCounsel.CONFIG,
+  'the-minjoo-party': theMinjooParty.CONFIG,
+  'reform-party': reformParty.CONFIG,
 }
 
 const voyage = new VoyageAIClient({
