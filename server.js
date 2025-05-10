@@ -12,12 +12,14 @@ import Vector from './models/Vector.js'
 import luckyBeach from './ai.lucky-beach.js'
 import mbtiCounsel from './ai.mbti-counsel.js'
 import theMinjooParty from './ai.the-minjoo-party.js'
+import peoplePowerParty from './ai.people-power-party.js'
 import reformParty from './ai.reform-party.js'
 
 const AI_CONFIGS = {
   'lucky-beach': luckyBeach.CONFIG,
   'mbti-counsel': mbtiCounsel.CONFIG,
   'the-minjoo-party': theMinjooParty.CONFIG,
+  'people-power-party': peoplePowerParty.CONFIG,
   'reform-party': reformParty.CONFIG,
 }
 
