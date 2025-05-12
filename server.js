@@ -146,22 +146,46 @@ fastify.post('/users', async function handler (request, reply) {
 })
 
 // Generic message handler for all AI configurations
-fastify.post('/:aiName/messages', async function handler (request, reply) {
-  const { aiName } = request.params
-  const aiConfig = AI_CONFIGS[aiName]
+fastify.post('/:aiKey/messages', async function handler (request, reply) {
+  const { aiKey } = request.params
+  const aiConfig = AI_CONFIGS[aiKey]
   const { MODEL, TEMPERATURE, MAX_TOKENS, SYSTEM, STREAM } = aiConfig
 
   if (!aiConfig) {
-    reply.code(404).send({ error: `AI configuration '${aiName}' not found` })
+    reply.code(404).send({ error: `AI configuration '${aiKey}' not found` })
     return
   }
 
-  const { messages } = request.body
+  const { messages, messagesNew } = request.body
 
+  // 요청 본문 유효성 검사
   if (!messages || !Array.isArray(messages)) {
-    reply.code(400).send({ error: 'messages array is required' })
-    return
+    return reply.code(400).send({ error: 'messages array is required' })
   }
+
+  if (!messagesNew || !Array.isArray(messagesNew)) {
+    return reply.code(400).send({ error: 'messagesNew array is required' })
+  }
+
+  // 메시지 형식 검증
+  const isValidMessage = (msg) => msg && 
+    typeof msg === 'object' && 
+    typeof msg.role === 'string' && 
+    msg.content && 
+    typeof msg.content === 'object' &&
+    typeof msg.content.text === 'string'
+
+  if (!messages.every(isValidMessage) || !messagesNew.every(isValidMessage)) {
+    return reply.code(400).send({ 
+      error: 'Invalid message format. Expected: { role: string, content: { text: string } }' 
+    })
+  }
+
+  // 메시지 형식을 Anthropic API 형식으로 변환
+  const transformedMessages = [...messages].map(message => ({
+    role: message.role,
+    content: message.content.text // 현재는 { text}  필드만 받기 때문에 토큰 사용 최소화를 위해 최소한으로 참조합니다.
+  }))
 
   // Set headers for SSE with CORS
   reply.raw.writeHead(200, {
@@ -176,7 +200,7 @@ fastify.post('/:aiName/messages', async function handler (request, reply) {
 
   try {
     // Search for relevant context in vector DB
-    const relevantDocs = await searchVectorDB(messages, aiName)
+    const relevantDocs = await searchVectorDB(transformedMessages, aiKey)
     if (process.env.NODE_ENV === 'development') console.log({relevantDocs})
     
     // Extract the base system prompt
@@ -202,7 +226,7 @@ ${contextSection}
       max_tokens: MAX_TOKENS, 
       stream: STREAM, 
       system: enhancedSystemPrompt,
-      messages: messages
+      messages: transformedMessages
     })
 
     for await (const chunk of responseStream) {
