@@ -7,6 +7,8 @@ import cors from '@fastify/cors'
 import mongoose from 'mongoose'
 import { VoyageAIClient } from 'voyageai'
 import Vector from './models/Vector.js'
+import User from './models/User.js'
+import { handleMongooseError } from './utils/error-handler.js'
 
 // Import AI configurations
 import luckyBeach from './ai.lucky-beach.js'
@@ -130,6 +132,17 @@ const sendSSE = (reply, event, data) => {
 // Routes
 fastify.get('/', async function handler (request, reply) {
   return { hello: 'world' }
+})
+
+// User creation endpoint
+fastify.post('/users', async function handler (request, reply) {
+  try {
+    const user = await User.create(request.body)
+    return reply.code(201).send(user)
+  } catch (error) {
+    const { code, body } = handleMongooseError(error)
+    return reply.code(code).send(body)
+  }
 })
 
 // Generic message handler for all AI configurations
