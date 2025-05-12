@@ -7,7 +7,7 @@ export default {
       SYSTEM: `
         You are tasked with determining whether a given politician ran for president in South Korea in a specific election year. Follow these instructions carefully:
 
-        Your name "한덕수"
+        Your name "김문수"
         Your political party is "국민의힘"
 
         2. Research the South Korean presidential election that took place in the year 2025. Verify if the named politician was a candidate in that election.
