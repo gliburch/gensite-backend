@@ -1,14 +1,18 @@
 import * as dotenv from 'dotenv'
 dotenv.config()
 
+// Import dependencies
 import Fastify from 'fastify'
-import Anthropic from '@anthropic-ai/sdk'
 import cors from '@fastify/cors'
 import mongoose from 'mongoose'
+import { handleMongooseError } from './utils/error-handler.js'
+import Anthropic from '@anthropic-ai/sdk'
 import { VoyageAIClient } from 'voyageai'
+
+// Import models
 import Vector from './models/Vector.js'
 import User from './models/User.js'
-import { handleMongooseError } from './utils/error-handler.js'
+import Message from './models/Message.js'
 
 // Import AI configurations
 import luckyBeach from './ai.lucky-beach.js'
@@ -147,7 +151,14 @@ fastify.post('/users', async function handler (request, reply) {
 
 // Generic message handler for all AI configurations
 fastify.post('/messages', async function handler (request, reply) {
-  const { aiKey, aiResourceName } = request.body
+  const {
+    userId,
+    aiKey,
+    aiResourceName,
+    messages,
+    messagesNew
+  } = request.body
+
   const aiConfig = AI_CONFIGS[aiKey]
   const { MODEL, TEMPERATURE, MAX_TOKENS, SYSTEM, STREAM } = aiConfig
 
@@ -155,8 +166,6 @@ fastify.post('/messages', async function handler (request, reply) {
     reply.code(404).send({ error: `AI configuration '${aiKey}' not found` })
     return
   }
-
-  const { messages, messagesNew } = request.body
 
   // 요청 본문 유효성 검사
   if (!messages || !Array.isArray(messages)) {
@@ -181,12 +190,6 @@ fastify.post('/messages', async function handler (request, reply) {
     })
   }
 
-  // 메시지 형식을 Anthropic API 형식으로 변환
-  const transformedMessages = [...messages].map(message => ({
-    role: message.role,
-    content: message.content.text // 현재는 { text}  필드만 받기 때문에 토큰 사용 최소화를 위해 최소한으로 참조합니다.
-  }))
-
   // Set headers for SSE with CORS
   reply.raw.writeHead(200, {
     'Content-Type': 'text/event-stream',
@@ -199,6 +202,21 @@ fastify.post('/messages', async function handler (request, reply) {
   })
 
   try {
+    // DB 에 사용자 메시지 적재
+    if (messagesNew.length > 0) {
+      await Message.insertMany(messagesNew.map(message => ({
+        userId: userId,
+        aiKey: aiKey,
+        role: message.role,
+        content: message.content
+      })))
+    }
+    // 메시지 형식을 Anthropic API 형식으로 변환
+    const transformedMessages = [...messages].map(message => ({
+      role: message.role,
+      content: message.content.text // 현재는 { text}  필드만 받기 때문에 토큰 사용 최소화를 위해 최소한으로 참조합니다.
+    }))
+
     // Search for relevant context in vector DB
     const relevantDocs = await searchVectorDB(transformedMessages, aiKey)
     if (process.env.NODE_ENV === 'development') console.log({relevantDocs})
@@ -229,9 +247,16 @@ ${contextSection}
       messages: transformedMessages
     })
 
+    // 완성된 메시지를 저장할 변수
+    let completeMessage = {
+      text: '',
+      mood: null
+    }
+
     for await (const chunk of responseStream) {
       // Forward the exact same event format with event type
       if (chunk.type === 'content_block_delta') {
+        completeMessage.text += chunk.delta.text || ''
         sendSSE(reply, 'content_block_delta', chunk)
       } else if (chunk.type === 'content_block_start') {
         sendSSE(reply, 'content_block_start', chunk)
@@ -245,6 +270,30 @@ ${contextSection}
     // Send message_stop event
     sendSSE(reply, 'message_stop', { type: 'message_stop' })
     reply.raw.end()
+
+    // 완성된 메시지에서 구조화된 데이터로 복원 시도
+    try {
+      const messageObj = JSON.parse(completeMessage.text)
+      if (messageObj.mood && messageObj.text) {
+        completeMessage = {
+          text: messageObj.text,
+          mood: messageObj.mood
+        }
+      }
+    } catch (e) {
+      console.log('Failed to parse message as JSON, using raw text')
+    }
+
+    // DB에 AI 답변 적재
+    await Message.create({
+      userId: userId,
+      aiKey: aiKey,
+      role: 'assistant',
+      content: {
+        text: completeMessage.text,
+        mood: completeMessage.mood
+      }
+    })
   } catch (error) {
     fastify.log.error(error)
     // Send error in the same format
