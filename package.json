@@ -10,6 +10,7 @@
     "embed:people-power-party": "AI_KEY=peoplePowerParty MONGODB_DB=lucky-beach node scripts/embed-documents.js",
     "embed:reform-party": "AI_KEY=reformParty MONGODB_DB=lucky-beach node scripts/embed-documents.js",
     "embed:the-minjoo-party": "AI_KEY=theMinjooParty MONGODB_DB=lucky-beach node scripts/embed-documents.js",
+    "embed": "npm run embed:people-power-party && npm run embed:reform-party && npm run embed:the-minjoo-party",
     "dev": "NODE_ENV=development nodemon server.js",
     "start": "node server.js"
   },
