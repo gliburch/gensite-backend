@@ -2,8 +2,14 @@ import mongoose from 'mongoose'
 
 // Define Vector Schema
 const VectorSchema = new mongoose.Schema({
-  aiName: String,
-  text: String,
+  aiKey: {
+    type: String,
+    required: true
+  },
+  text: {
+    type: String,
+    required: true
+  },
   embedding: {
     type: [Number],
     required: true,
@@ -16,7 +22,10 @@ const VectorSchema = new mongoose.Schema({
       }
     }
   },
-  embeddingModel: String,
+  embeddingModel: {
+    type: String,
+    required: true
+  },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now }
 }, {

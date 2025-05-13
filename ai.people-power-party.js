@@ -34,6 +34,8 @@ export default {
     },
     EMBEDDING: {
       MODEL: "voyage-3",
-      DOCUMENTS: []
+      DOCUMENTS: [
+        '국민의힘 대선 후보',
+      ]
     }
   }

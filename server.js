@@ -70,7 +70,7 @@ async function searchVectorDB(query, aiKey, limit = 3) {
     const queryEmbd = embedResponse.data[0].embedding
     
     // Get all documents from MongoDB
-    const documents = await Vector.find({}, { text: 1, embedding: 1, _id: 0 }).lean()
+    const documents = await Vector.find({ aiKey }, { text: 1, embedding: 1, _id: 0 }).lean()
     
     // Calculate cosine similarities
     const similarities = []

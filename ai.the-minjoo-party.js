@@ -34,6 +34,8 @@ export default {
     },
     EMBEDDING: {
       MODEL: "voyage-3",
-      DOCUMENTS: []
+      DOCUMENTS: [
+        '더불어민주당 대선 후보',
+      ]
     }
   }

@@ -8,17 +8,24 @@ import Vector from '../models/Vector.js';
 // Import AI configurations
 import luckyBeach from '../ai.lucky-beach.js'
 import mbtiCounsel from '../ai.mbti-counsel.js'
+import peoplePowerParty from '../ai.people-power-party.js'
+import reformParty from '../ai.reform-party.js'
+import theMinjooParty from '../ai.the-minjoo-party.js'
 
+const AI_KEY = process.env.AI_KEY;
 const AI_EMBEDDINGS = {
-  'lucky-beach': luckyBeach.EMBEDDING,
-  'mbti-counsel': mbtiCounsel.EMBEDDING,
+  'luckyBeach': luckyBeach.EMBEDDING,
+  'mbtiCounsel': mbtiCounsel.EMBEDDING,
+  'peoplePowerParty': peoplePowerParty.EMBEDDING,
+  'reformParty': reformParty.EMBEDDING,
+  'theMinjooParty': theMinjooParty.EMBEDDING,
 }
-const embeddingModel = AI_EMBEDDINGS[process.env.AI].MODEL;
-const embeddingDocuments = AI_EMBEDDINGS[process.env.AI].DOCUMENTS;
+const embeddingModel = AI_EMBEDDINGS[AI_KEY].MODEL;
+const embeddingDocuments = AI_EMBEDDINGS[AI_KEY].DOCUMENTS;
 
 // Configuration
 const MONGODB_URI = process.env.MONGODB_URI;
-const MONGODB_DB = process.env.AI;
+const MONGODB_DB = process.env.MONGODB_DB;
 const VOYAGE_API_KEY = process.env.VOYAGE_API_KEY;
 const VOYAGE_MODEL = embeddingModel;
 const BATCH_SIZE = 10; // Number of documents to embed in a single API call
@@ -94,6 +101,7 @@ async function processBatch(documents) {
       
       // Prepare documents with embeddings for MongoDB
       const embeddedDocs = batch.map((text, index) => ({
+        aiKey: AI_KEY,
         text: text,
         embedding: embeddings[index],
         embeddingModel: VOYAGE_MODEL,

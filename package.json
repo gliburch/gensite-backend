@@ -5,7 +5,11 @@
   "author": "Kim Han-sol <studio.gliburch@gmail.com>",
   "main": "server.js",
   "scripts": {
-    "embed": "AI=lucky-beach node scripts/embed-documents.js",
+    "embed:lucky-beach": "AI_KEY=luckyBeach MONGODB_DB=lucky-beach node scripts/embed-documents.js",
+    "embed:mbti-counsel": "AI_KEY=mbtiCounsel MONGODB_DB=lucky-beach node scripts/embed-documents.js",
+    "embed:people-power-party": "AI_KEY=peoplePowerParty MONGODB_DB=lucky-beach node scripts/embed-documents.js",
+    "embed:reform-party": "AI_KEY=reformParty MONGODB_DB=lucky-beach node scripts/embed-documents.js",
+    "embed:the-minjoo-party": "AI_KEY=theMinjooParty MONGODB_DB=lucky-beach node scripts/embed-documents.js",
     "dev": "NODE_ENV=development nodemon server.js",
     "start": "node server.js"
   },
