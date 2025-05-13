@@ -3,14 +3,7 @@ dotenv.config();
 
 import mongoose from 'mongoose';
 import { VoyageAIClient } from 'voyageai';
-import fs from 'fs/promises';
-import path from 'path';
-import { fileURLToPath } from 'url';
 import Vector from '../models/Vector.js';
-
-// Get directory name for ES module
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 // Import AI configurations
 import luckyBeach from '../ai.lucky-beach.js'
@@ -130,16 +123,6 @@ async function processBatch(documents) {
 // Main function
 async function main() {
   try {
-    // Import AI configuration with documents
-    const aiModulePath = path.resolve(__dirname, '../ai.lucky-beach.js');
-    
-    // Check if file exists
-    try {
-      await fs.access(aiModulePath);
-    } catch (error) {
-      console.error(`AI configuration file does not exist at ${aiModulePath}`);
-      process.exit(1);
-    }
     
     const documents = embeddingDocuments;
     
