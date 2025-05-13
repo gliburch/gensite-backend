@@ -18,11 +18,11 @@ import peoplePowerParty from './ai.people-power-party.js'
 import reformParty from './ai.reform-party.js'
 
 const AI_CONFIGS = {
-  'lucky-beach': luckyBeach.CONFIG,
-  'mbti-counsel': mbtiCounsel.CONFIG,
-  'the-minjoo-party': theMinjooParty.CONFIG,
-  'people-power-party': peoplePowerParty.CONFIG,
-  'reform-party': reformParty.CONFIG,
+  'luckyBeach': luckyBeach.CONFIG,
+  'mbtiCounsel': mbtiCounsel.CONFIG,
+  'theMinjooParty': theMinjooParty.CONFIG,
+  'peoplePowerParty': peoplePowerParty.CONFIG,
+  'reformParty': reformParty.CONFIG,
 }
 
 const voyage = new VoyageAIClient({
@@ -47,7 +47,7 @@ async function connectToMongoose() {
 connectToMongoose()
 
 // Vector search function
-async function searchVectorDB(query, aiName, limit = 3) {
+async function searchVectorDB(query, aiKey, limit = 3) {
   try {
     // Get last message text from query
     const lastMessage = query[query.length - 1]
@@ -146,13 +146,13 @@ fastify.post('/users', async function handler (request, reply) {
 })
 
 // Generic message handler for all AI configurations
-fastify.post('/:aiResourceName/messages', async function handler (request, reply) {
-  const { aiResourceName } = request.params
-  const aiConfig = AI_CONFIGS[aiResourceName]
+fastify.post('/messages', async function handler (request, reply) {
+  const { aiKey, aiResourceName } = request.body
+  const aiConfig = AI_CONFIGS[aiKey]
   const { MODEL, TEMPERATURE, MAX_TOKENS, SYSTEM, STREAM } = aiConfig
 
   if (!aiConfig) {
-    reply.code(404).send({ error: `AI configuration '${aiResourceName}' not found` })
+    reply.code(404).send({ error: `AI configuration '${aiKey}' not found` })
     return
   }
 
@@ -200,7 +200,7 @@ fastify.post('/:aiResourceName/messages', async function handler (request, reply
 
   try {
     // Search for relevant context in vector DB
-    const relevantDocs = await searchVectorDB(transformedMessages, aiResourceName)
+    const relevantDocs = await searchVectorDB(transformedMessages, aiKey)
     if (process.env.NODE_ENV === 'development') console.log({relevantDocs})
     
     // Extract the base system prompt
