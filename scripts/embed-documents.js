@@ -138,6 +138,10 @@ async function main() {
     
     // Connect to MongoDB
     await connectToMongoose();
+
+    // Delete existing vectors for this AI_KEY before inserting new ones
+    await Vector.deleteMany({ aiKey: AI_KEY });
+    console.log(`Deleted existing vectors for aiKey: ${AI_KEY}`);
     
     // Process documents
     const processedCount = await processBatch(documents);
