@@ -51,9 +51,10 @@ Your goal is to inform, not to persuade or argue.
 - 05.29.(목) ~ 05.30.(금): 사전투표 (매일 오전 6시 ~ 오후 6시까지)
 - 06.03.(화): 투표 (오전 6시 ~ 오후 8시까지), 개표 (투표종료후 즉시)
 `,
-        `공식 유튜브: https://www.youtube.com/channel/UCBbaSGfMLK1e9p22zjs0Ksw
-공식 페이스북: https://www.facebook.com/jeong.uchang.145156
-공식 인스타그램: https://www.instagram.com/kimmoonsoo_2025
+        `공식 홈페이지: https://2025victory.kr
+공식 유튜브: https://youtube.com/@김문수TV
+공식 페이스북: https://facebook.com/jeong.uchang.145156
+공식 인스타그램: https://instagram.com/kimmoonsoo_2025
 공식 트위터(X): https://x.com/kimmoonsoo_2025`,
         `# 자유 주도 성장, 기업하기 좋은 나라
 ## 목표

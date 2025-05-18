@@ -51,6 +51,12 @@ Your goal is to inform, not to persuade or argue.
 - 05.29.(목) ~ 05.30.(금): 사전투표 (매일 오전 6시 ~ 오후 6시까지)
 - 06.03.(화): 투표 (오전 6시 ~ 오후 8시까지), 개표 (투표종료후 즉시)
 `,
+        `공식 홈페이지: https://www.begintruekorea.com
+공식 유튜브: https://youtube.com/@이재명tv
+공식 페이스북: https://facebook.com/jaemyunglee
+공식 인스타그램: https://instagram.com/2_jaemyung
+공식 트위터(X): https://x.com/jaemyung_lee
+`,
         `# 세계를 선도하는 경제 강국을 만들겠습니다
 # AI·신산업 및 K-콘텐츠로 성장기반 구축
 ## 분야
