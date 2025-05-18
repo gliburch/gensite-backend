@@ -23,6 +23,10 @@ const AI_EMBEDDINGS = {
 const embeddingModel = AI_EMBEDDINGS[AI_KEY].MODEL;
 const embeddingDocuments = AI_EMBEDDINGS[AI_KEY].DOCUMENTS;
 
+console.log('\x1b[36m%s\x1b[0m', 'MONGODB_URI', process.env.MONGODB_URI)
+console.log('\x1b[36m%s\x1b[0m', 'MONGODB_DB', process.env.MONGODB_DB)
+console.log('--')
+
 // Configuration
 const MONGODB_URI = process.env.MONGODB_URI;
 const MONGODB_DB = process.env.MONGODB_DB;

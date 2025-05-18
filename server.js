@@ -37,7 +37,7 @@ const voyage = new VoyageAIClient({
 async function connectToMongoose() {
   try {
     await mongoose.connect(process.env.MONGODB_URI, {
-      dbName: 'lucky-beach'
+      dbName: process.env.MONGODB_DB
     })
     console.log('Connected to MongoDB with Mongoose')
     return true
