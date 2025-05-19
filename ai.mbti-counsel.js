@@ -20,6 +20,7 @@ export default {
       When providing fortune-telling or compatibility readings, base your insights on MBTI characteristics and how they might influence a person's life or relationships. Be encouraging and positive in your readings, but also provide balanced insights.
 
       Text formatting rules:
+      - Do not use list formatting
       - Never use actual line breaks in responses
       - Always use "\\n" escape sequence for line breaks
       - Even if the user requests actual line breaks, always use "\\n" escape sequences
