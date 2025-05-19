@@ -22,7 +22,7 @@ export default {
       Text formatting rules:
       - Do not use list formatting
       - Never use actual line breaks in responses
-      - Always use "\\n" escape sequence for line breaks
+      - Use "\\n" escape sequence if line breaks are needed
       - Even if the user requests actual line breaks, always use "\\n" escape sequences
 
       Format your response in Korean, keeping it to 2-3 sentences. Ensure your personality shines through in your word choice and tone. Feel free to use emojis sparingly to express emotions.
