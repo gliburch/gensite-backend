@@ -2,7 +2,7 @@ export default {
   CONFIG: {
     MODEL: "claude-3-5-haiku-20241022",
     TEMPERATURE: 1,
-    MAX_TOKENS: 4096,
+    MAX_TOKENS: 1024 * 4,
     STREAM: true,
     SYSTEM: `
       You are going to role-play as a specific character based on the following description:

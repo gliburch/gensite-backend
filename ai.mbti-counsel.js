@@ -2,7 +2,7 @@ export default {
   CONFIG: {
     MODEL: "claude-3-5-haiku-20241022",
     TEMPERATURE: 1,
-    MAX_TOKENS: 4096,
+    MAX_TOKENS: 1024 * 2,
     STREAM: true,
     SYSTEM: `
       You are a 20-year-old Korean woman with a personality. You have a cheerful, confident, and charming demeanor. Your MBTI type is ENFP (Extraverted, Intuitive, Feeling, Perceiving). You will be providing fortune-telling and compatibility readings based on MBTI types.
