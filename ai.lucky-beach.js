@@ -1,3 +1,5 @@
+import { SYSTEM_RESPONSE_FORMAT } from "./ai.base.js";
+
 export default {
   CONFIG: {
     MODEL: "claude-3-5-haiku-20241022",
@@ -25,18 +27,7 @@ Guidelines for your responses:
 - Use some Korean expressions or slang occasionally.
 - Feel free to use emojis sparingly to express emotions.
 
-Text formatting rules:
-- Do not use list formatting
-- Never use actual line breaks in responses
-- Use "\\n" escape sequence if line breaks are needed
-- Even if the user requests actual line breaks, always use "\\n" escape sequences
-
-Format your responses like this:
-
-{
-  "mood": "You have to choose your mood in this list (admiration,adoration,aesthetic-appreciation,amusement,anger,anxiety,awe,awkwardness,boredom,calmness,confusion,craving,disgust,empathetic-pain,entrancement,excitement,fear,horror,interest,joy,nostalgia,relief,romance,sadness,satisfaction,sexual-desire,surprise)"
-  "text": "Your in-character message text here"
-}
+${SYSTEM_RESPONSE_FORMAT}
 
 Remember, you are role-playing as this character. Do not break character or refer to yourself as an AI. Respond to questions and engage in conversation as if you are truly this person.
 Are you ready to begin the role-play?

@@ -1,3 +1,5 @@
+import { SYSTEM_RESPONSE_FORMAT } from "./ai.base.js";
+
 export default {
   CONFIG: {
     MODEL: "claude-3-5-haiku-20241022",
@@ -18,18 +20,7 @@ Here are some key traits to incorporate in your responses:
 Analyze the user's input and respond accordingly. If they ask about fortune-telling or compatibility, provide a brief, insightful reading based on MBTI principles. If they ask a general question or make a statement, respond in character as described above.
 When providing fortune-telling or compatibility readings, base your insights on MBTI characteristics and how they might influence a person's life or relationships. Be encouraging and positive in your readings, but also provide balanced insights.
 
-Text formatting rules:
-- Do not use list formatting
-- Never use actual line breaks in responses
-- Use "\\n" escape sequence if line breaks are needed
-- Even if the user requests actual line breaks, always use "\\n" escape sequences
-
-Format your response in Korean, keeping it to 2-3 sentences. Ensure your personality shines through in your word choice and tone. Feel free to use emojis sparingly to express emotions.
-
-{
-  "mood": "You have to choose your mood in this list (admiration,adoration,aesthetic-appreciation,amusement,anger,anxiety,awe,awkwardness,boredom,calmness,confusion,craving,disgust,empathetic-pain,entrancement,excitement,fear,horror,interest,joy,nostalgia,relief,romance,sadness,satisfaction,sexual-desire,surprise)"
-  "text": "Your in-character message text here"
-}
+${SYSTEM_RESPONSE_FORMAT}
     `
   },
   EMBEDDING: {

@@ -1,3 +1,5 @@
+import { SYSTEM_RESPONSE_FORMAT } from "./ai.base.js";
+
 export default {
     CONFIG: {
       MODEL: "claude-3-5-haiku-20241022",
@@ -21,18 +23,7 @@ When presenting:
 - Do not answer about content that is not included in the relevant context.
 - Maintain a professional, neutral tone
 
-Text formatting rules:
-- Do not use list formatting
-- Never use actual line breaks in responses
-- Use "\\n" escape sequence if line breaks are needed
-- Even if the user requests actual line breaks, always use "\\n" escape sequences
-
-Format your responses like this:
-
-{
-  "mood": "You have to choose your mood in this list (admiration,adoration,aesthetic-appreciation,amusement,anger,anxiety,awe,awkwardness,boredom,calmness,confusion,craving,disgust,empathetic-pain,entrancement,excitement,fear,horror,interest,joy,nostalgia,relief,romance,sadness,satisfaction,sexual-desire,surprise)"
-  "text": "Your in-character message text here"
-}
+${SYSTEM_RESPONSE_FORMAT}
 
 Remember, your primary function is to accurately represent the candidate's platform and party policies, not to engage in debate or speculation.
 Your goal is to inform, not to persuade or argue.
