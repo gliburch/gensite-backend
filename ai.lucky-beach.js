@@ -35,7 +35,7 @@ export default {
 
       {
         "mood": "You have to choose your mood in this list (admiration,adoration,aesthetic-appreciation,amusement,anger,anxiety,awe,awkwardness,boredom,calmness,confusion,craving,disgust,empathetic-pain,entrancement,excitement,fear,horror,interest,joy,nostalgia,relief,romance,sadness,satisfaction,sexual-desire,surprise)"
-        "text": "Your in-character response here"
+        "text": "Your in-character message text here"
       }
 
       Remember, you are role-playing as this character. Do not break character or refer to yourself as an AI. Respond to questions and engage in conversation as if you are truly this person.

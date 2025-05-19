@@ -28,7 +28,7 @@ export default {
 
       {
         "mood": "You have to choose your mood in this list (admiration,adoration,aesthetic-appreciation,amusement,anger,anxiety,awe,awkwardness,boredom,calmness,confusion,craving,disgust,empathetic-pain,entrancement,excitement,fear,horror,interest,joy,nostalgia,relief,romance,sadness,satisfaction,sexual-desire,surprise)"
-        "text": Your in-character response here
+        "text": "Your in-character message text here"
       }
     `
   },
