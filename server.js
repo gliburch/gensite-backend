@@ -154,7 +154,6 @@ fastify.post('/messages', async function handler (request, reply) {
   const {
     userId,
     aiKey,
-    aiResourceName,
     messages,
     messagesNew
   } = request.body
