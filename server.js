@@ -20,6 +20,7 @@ import mbtiCounsel from './ai.mbti-counsel.js'
 import theMinjooParty from './ai.the-minjoo-party.js'
 import peoplePowerParty from './ai.people-power-party.js'
 import reformParty from './ai.reform-party.js'
+import kParty from './ai.k-party.js'
 
 const AI_CONFIGS = {
   'luckyBeach': luckyBeach.CONFIG,
@@ -27,6 +28,7 @@ const AI_CONFIGS = {
   'theMinjooParty': theMinjooParty.CONFIG,
   'peoplePowerParty': peoplePowerParty.CONFIG,
   'reformParty': reformParty.CONFIG,
+  'kParty': kParty.CONFIG
 }
 
 const voyage = new VoyageAIClient({
@@ -154,7 +156,6 @@ fastify.post('/messages', async function handler (request, reply) {
   const {
     userId,
     aiKey,
-    aiResourceName,
     messages,
     messagesNew
   } = request.body
@@ -305,6 +306,55 @@ ${contextSection}
       }
     })
     reply.raw.end()
+  }
+})
+
+fastify.post('/k-party/analysis', async function handler(request, reply) {
+  const {
+    userId,
+    query,
+  } = request.body
+  
+  if (!query) {
+    return reply.code(400).send({ error: 'Query parameter is required' })
+  }
+
+  const { MODEL, TEMPERATURE, MAX_TOKENS, STREAM, SYSTEM } = AI_CONFIGS.kParty
+  
+  if (!MODEL) {
+    return reply.code(404).send({ error: 'K-Party AI configuration not found' })
+  }
+
+  try {
+    const response = await anthropic.messages.create({
+      model: MODEL,
+      temperature: TEMPERATURE,
+      max_tokens: MAX_TOKENS,
+      stream: STREAM,
+      system: SYSTEM,
+      messages: [{
+        role: 'user',
+        content: query
+      }]
+    })
+
+    const rawText = response.content[0].text
+    const cleanedText = rawText.trim().replace(/[\r\n]+/g, ' ')
+    const parsedJson = JSON.parse(cleanedText)
+    
+    try {
+      return reply.code(201).send(parsedJson)
+    } catch (err) {
+      console.error('Error parsing JSON response:', err)
+      return reply.code(500).send({ 
+        error: 'Failed to parse AI response',
+        details: err.message
+      })
+    }
+
+  } catch (error) {
+    console.error('Error in k-party analysis:', error)
+    return reply.code(500).send({ error: 'Internal server error' })
   }
 })
 
