@@ -13,6 +13,7 @@ import { VoyageAIClient } from 'voyageai'
 import Vector from './models/Vector.js'
 import User from './models/User.js'
 import Message from './models/Message.js'
+import Analysis from './models/Analysis.js'
 
 // Import AI configurations
 import luckyBeach from './ai.lucky-beach.js'
@@ -319,6 +320,10 @@ fastify.post('/k-party/analysis', async function handler(request, reply) {
     return reply.code(400).send({ error: 'Query parameter is required' })
   }
 
+  if (!userId) {
+    return reply.code(400).send({ error: 'userId is required' })
+  }
+
   const { MODEL, TEMPERATURE, MAX_TOKENS, STREAM, SYSTEM } = AI_CONFIGS.kParty
   
   if (!MODEL) {
@@ -343,17 +348,46 @@ fastify.post('/k-party/analysis', async function handler(request, reply) {
     const parsedJson = JSON.parse(cleanedText)
     
     try {
-      return reply.code(201).send(parsedJson)
+      // 분석 결과 저장
+      const analysis = await Analysis.create({
+        userId,
+        analysis: parsedJson
+      })
+      return reply.code(201).send({
+        _id: analysis._id,
+        ...parsedJson
+      })
     } catch (err) {
-      console.error('Error parsing JSON response:', err)
+      console.error('Error saving analysis:', err)
       return reply.code(500).send({ 
-        error: 'Failed to parse AI response',
+        error: 'Failed to save analysis',
         details: err.message
       })
     }
 
   } catch (error) {
     console.error('Error in k-party analysis:', error)
+    return reply.code(500).send({ error: 'Internal server error' })
+  }
+})
+
+// Get specific analysis
+fastify.get('/k-party/analysis/:analysisId', async function handler(request, reply) {
+  const { analysisId } = request.params
+
+  try {
+    const analysis = await Analysis.findById(analysisId)
+    
+    if (!analysis) {
+      return reply.code(404).send({ error: 'Analysis not found' })
+    }
+
+    return {
+      _id: analysis._id,
+      ...analysis.analysis
+    }
+  } catch (error) {
+    console.error('Error fetching analysis:', error)
     return reply.code(500).send({ error: 'Internal server error' })
   }
 })
