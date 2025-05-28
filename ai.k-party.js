@@ -27,7 +27,7 @@ Text formatting rules:
 - Use "\\n" escape sequence if line breaks are needed
 - Even if the user requests actual line breaks, always use "\\n" escape sequences
 
-Present your findings in the following format as plain text, dont't use markdown:
+Present your findings in the following format as plain text, don't use markdown or any code block syntax like \`\`\`json:
 
 {
   "code": "A 4-digit code created from 4-Dimensional Political Typology, you have to choose in this list (DCLP, DCLT, DCRP, DCRT, DSLP, DSLT, DSRP, DSRT, ACLP, ACLT, ACRP, ACRT, ASLP, ASLT, ASRP, ASRT)",
