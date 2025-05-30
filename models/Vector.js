@@ -4,7 +4,8 @@ import mongoose from 'mongoose'
 const VectorSchema = new mongoose.Schema({
   aiKey: {
     type: String,
-    required: true
+    required: true,
+    index: true
   },
   text: {
     type: String,
@@ -18,7 +19,10 @@ const VectorSchema = new mongoose.Schema({
       type: 'vectorSearch',
       vectorOptions: {
         dimensions: 1024,
-        similarity: 'cosine'
+        similarity: 'cosine',
+        numCandidates: 100,
+        efConstruction: 128,
+        efSearch: 100
       }
     }
   },
@@ -26,11 +30,22 @@ const VectorSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  createdAt: { type: Date, default: Date.now },
-  updatedAt: { type: Date, default: Date.now }
+  createdAt: { 
+    type: Date, 
+    default: Date.now,
+    index: true
+  },
+  updatedAt: { 
+    type: Date, 
+    default: Date.now 
+  }
 }, {
   versionKey: false // Disable the __v field
 });
+
+// 복합 인덱스 추가
+VectorSchema.index({ aiKey: 1, embeddingModel: 1 });
+VectorSchema.index({ aiKey: 1, createdAt: -1 });
 
 // Create and export the model
 const Vector = mongoose.models.Vector || mongoose.model('Vector', VectorSchema, 'vectors')

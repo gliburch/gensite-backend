@@ -43,6 +43,37 @@ async function connectToMongoose() {
       dbName: process.env.MONGODB_DB
     })
     console.log('Connected to MongoDB with Mongoose')
+
+    // 벡터 인덱스 생성 또는 업데이트
+    const vectorCollection = mongoose.connection.collection('vectors')
+    
+    try {
+      // 기존 인덱스 삭제
+      await vectorCollection.dropIndex('embedding_index')
+      console.log('Dropped existing vector index')
+    } catch (err) {
+      // 인덱스가 없는 경우 무시
+      if (err.code !== 27) {
+        console.error('Error dropping index:', err)
+      }
+    }
+
+    // 새 인덱스 생성
+    await vectorCollection.createIndex(
+      { embedding: 'vectorSearch' },
+      {
+        name: 'embedding_index',
+        vectorOptions: {
+          dimensions: 1024,
+          similarity: 'cosine',
+          numCandidates: 100,
+          efConstruction: 128,
+          efSearch: 100
+        }
+      }
+    )
+    console.log('Created new vector index')
+
     return true
   } catch (error) {
     console.error('Failed to connect to MongoDB with Mongoose:', error)
