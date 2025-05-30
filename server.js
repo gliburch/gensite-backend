@@ -58,21 +58,15 @@ async function connectToMongoose() {
       }
     }
 
-    // 새 인덱스 생성
+    // 새 인덱스 생성 - 일반 인덱스로 변경
     await vectorCollection.createIndex(
-      { embedding: 'vectorSearch' },
-      {
+      { embedding: 1 },
+      { 
         name: 'embedding_index',
-        vectorOptions: {
-          dimensions: 1024,
-          similarity: 'cosine',
-          numCandidates: 100,
-          efConstruction: 128,
-          efSearch: 100
-        }
+        background: true  // 백그라운드에서 인덱스 생성
       }
     )
-    console.log('Created new vector index')
+    console.log('Created new standard index')
 
     return true
   } catch (error) {
