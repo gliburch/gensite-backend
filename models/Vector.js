@@ -12,18 +12,7 @@ const VectorSchema = new mongoose.Schema({
   },
   embedding: {
     type: [Number],
-    required: true,
-    index: {
-      name: 'embedding_index',
-      type: 'vectorSearch',
-      vectorOptions: {
-        dimensions: 1024,
-        similarity: 'cosine',
-        numCandidates: 100,
-        efConstruction: 128,
-        efSearch: 100
-      }
-    }
+    required: true
   },
   embeddingModel: {
     type: String,
