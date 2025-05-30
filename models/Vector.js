@@ -4,8 +4,7 @@ import mongoose from 'mongoose'
 const VectorSchema = new mongoose.Schema({
   aiKey: {
     type: String,
-    required: true,
-    index: true
+    required: true
   },
   text: {
     type: String,
@@ -32,8 +31,7 @@ const VectorSchema = new mongoose.Schema({
   },
   createdAt: { 
     type: Date, 
-    default: Date.now,
-    index: true
+    default: Date.now
   },
   updatedAt: { 
     type: Date, 
@@ -43,9 +41,8 @@ const VectorSchema = new mongoose.Schema({
   versionKey: false // Disable the __v field
 });
 
-// 복합 인덱스 추가
-VectorSchema.index({ aiKey: 1, embeddingModel: 1 });
-VectorSchema.index({ aiKey: 1, createdAt: -1 });
+// aiKey와 embedding을 함께 사용하는 복합 인덱스 추가
+VectorSchema.index({ aiKey: 1, embedding: 1 });
 
 // Create and export the model
 const Vector = mongoose.models.Vector || mongoose.model('Vector', VectorSchema, 'vectors')
