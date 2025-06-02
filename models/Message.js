@@ -8,8 +8,7 @@ const messageSchema = new mongoose.Schema({
   },
   aiKey: {
     type: String,
-    required: true,
-    index: true
+    required: true
   },
   role: {
     type: String,
@@ -40,7 +39,7 @@ const messageSchema = new mongoose.Schema({
   versionKey: false // Disable the __v field
 });
 
-// 인덱스 생성
+// 복합 인덱스 필요한 경우 추가
 messageSchema.index({ userId: 1, aiKey: 1 })
 
 const Message = mongoose.models.Message || mongoose.model('Message', messageSchema)

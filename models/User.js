@@ -50,10 +50,6 @@ const userSchema = new mongoose.Schema({
   versionKey: false // Disable the __v field
 })
 
-// 인덱스 생성
-userSchema.index({ region: 1 })
-userSchema.index({ birthYear: 1 })  // 생년 기반 검색을 위한 인덱스
-
 const User = mongoose.models.User || mongoose.model('User', userSchema)
 
 export default User 

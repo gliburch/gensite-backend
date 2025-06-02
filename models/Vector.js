@@ -30,7 +30,7 @@ const VectorSchema = new mongoose.Schema({
   versionKey: false // Disable the __v field
 });
 
-// aiKey와 embedding을 함께 사용하는 복합 인덱스 추가
+// 복합 인덱스 필요한 경우 추가
 VectorSchema.index({ aiKey: 1, embedding: 1 });
 
 // Create and export the model
