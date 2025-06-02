@@ -13,6 +13,8 @@
     "embed-kparty": "npm run embed:the-minjoo-party && npm run embed:people-power-party && npm run embed:reform-party",
     "embed-kparty:dev": "dotenv -e .env -- npm run embed-kparty",
     "embed-kparty:prd": "dotenv -e .env.prd -- npm run embed-kparty",
+    "reset-indexes:dev": "dotenv -e .env -- node scripts/reset-mongodb-indexes.js",
+    "reset-indexes:prd": "dotenv -e .env.prd -- node scripts/reset-mongodb-indexes.js",
     "dev": "NODE_ENV=development nodemon server.js",
     "start": "node server.js"
   },
