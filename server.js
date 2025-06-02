@@ -115,6 +115,27 @@ const fastify = Fastify({
   logger: true
 })
 
+// MARK: Serverless 환경에서는 인스턴스가 매 번 생성되면서 DB 연결을 하기 때문에,
+//       API 요청이랑 순서가 뒤바뀔 수 있어 이를 보완하기 위해 MongoDB 연결 상태 확인을 위한 hook을 추가합니다.
+fastify.addHook('onRequest', async (request, reply) => {
+  // health check나 정적 리소스 요청은 건너뛰기
+  if (request.url === '/' || request.url.startsWith('/public')) {
+    return;
+  }
+  // MongoDB 연결 상태 확인 후 연결이 안되어 있으면 연결 시도
+  if (mongoose.connection.readyState !== 1) {
+    console.log('MongoDB connection not ready in hook, attempting to connect...');
+    const connected = await connectToMongoose();
+    if (!connected) {
+      reply.code(503).send({ 
+        error: 'Database connection error',
+        message: 'Failed to establish database connection'
+      });
+      return;
+    }
+  }
+});
+
 // CORS
 await fastify.register(cors, {
   origin: process.env.NODE_ENV === 'development'
