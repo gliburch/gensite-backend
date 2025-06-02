@@ -31,9 +31,6 @@ const VectorSchema = new mongoose.Schema({
   versionKey: false // Disable the __v field
 });
 
-// 복합 인덱스 필요한 경우 추가
-VectorSchema.index({ aiKey: 1, embedding: 1 });
-
 // Create and export the model
 const Vector = mongoose.models.Vector || mongoose.model('Vector', VectorSchema, 'vectors')
 
