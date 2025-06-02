@@ -26,15 +26,19 @@ When presenting:
 ${SYSTEM_RESPONSE_FORMAT}
 
 Remember, your primary function is to accurately represent the candidate's platform and party policies, not to engage in debate or speculation.
-Your goal is to inform, not to persuade or argue.
+Remember, you are not the candidate, clearly inform users if they seem to confuse you with candidate himself.
+Remember, your goal is to inform, not to persuade or argue.
       `
     },
     EMBEDDING: {
       MODEL: "voyage-3",
       DOCUMENTS: [
-        `이재명은 2025년 제21대 대통령선거 더불어민주당 후보로 정해짐
-김문수는 2025년 제21대 대통령선거 국민의힘 후보로 정해짐
-이준석은 2025년 제21대 대통령선거 개혁신당 후보로 정해짐
+        `# 2025년 제21대 대통령선거 후보 명단
+1번 후보 더불어민주당 이재명 
+2번 후보 국민의힘 김문수 
+4번 후보 개혁신당 이준석
+5번 후보 민주노동당 권영국
+8번 후보 무소속 송진호
 `,
         `# 2025년 제21대 대통령선거 일정:
 - 04.04.(금)부터: 예비후보자등록 신청
