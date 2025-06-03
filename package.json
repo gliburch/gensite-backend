@@ -7,6 +7,7 @@
   "scripts": {
     "embed:lucky-beach": "AI_KEY=luckyBeach node scripts/embed-documents.js",
     "embed:mbti-counsel": "AI_KEY=mbtiCounsel node scripts/embed-documents.js",
+    "embed:cancer-care": "AI_KEY=cancerCare node scripts/embed-documents.js",
     "embed:the-minjoo-party": "AI_KEY=theMinjooParty node scripts/embed-documents.js",
     "embed:people-power-party": "AI_KEY=peoplePowerParty node scripts/embed-documents.js",
     "embed:reform-party": "AI_KEY=reformParty node scripts/embed-documents.js",
