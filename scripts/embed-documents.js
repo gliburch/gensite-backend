@@ -8,6 +8,7 @@ import Vector from '../models/Vector.js';
 // Import AI configurations
 import luckyBeach from '../ai.lucky-beach.js'
 import mbtiCounsel from '../ai.mbti-counsel.js'
+import cancerCare from '../ai.cancer-care.js'
 import peoplePowerParty from '../ai.people-power-party.js'
 import reformParty from '../ai.reform-party.js'
 import theMinjooParty from '../ai.the-minjoo-party.js'
@@ -16,6 +17,7 @@ const AI_KEY = process.env.AI_KEY;
 const AI_EMBEDDINGS = {
   'luckyBeach': luckyBeach.EMBEDDING,
   'mbtiCounsel': mbtiCounsel.EMBEDDING,
+  'cancerCare': cancerCare.EMBEDDING,
   'peoplePowerParty': peoplePowerParty.EMBEDDING,
   'reformParty': reformParty.EMBEDDING,
   'theMinjooParty': theMinjooParty.EMBEDDING,
