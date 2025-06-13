@@ -19,6 +19,7 @@ import Analysis from './models/Analysis.js'
 import luckyBeach from './ai.lucky-beach.js'
 import mbtiCounsel from './ai.mbti-counsel.js'
 import cancerCare from './ai.cancer-care.js'
+import settlusLtd from './ai.settlus-ltd.js'
 import theMinjooParty from './ai.the-minjoo-party.js'
 import peoplePowerParty from './ai.people-power-party.js'
 import reformParty from './ai.reform-party.js'
@@ -28,6 +29,7 @@ const AI_CONFIGS = {
   'luckyBeach': luckyBeach.CONFIG,
   'mbtiCounsel': mbtiCounsel.CONFIG,
   'cancerCare': cancerCare.CONFIG,
+  'settlusLtd': settlusLtd.CONFIG,
   'theMinjooParty': theMinjooParty.CONFIG,
   'peoplePowerParty': peoplePowerParty.CONFIG,
   'reformParty': reformParty.CONFIG,
