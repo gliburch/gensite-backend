@@ -259,8 +259,9 @@ fastify.post('/messages', async function handler (request, reply) {
       enhancedSystemPrompt = `
 ${baseSystemPrompt}
 
-The following information is relevant to the conversation. When answering the user, incorporate this information naturally without explicitly mentioning that it comes from a knowledge base:
+The following information is relevant to the conversation. When answering the user, incorporate this information naturally without explicitly mentioning that it comes from a knowledge base.
 
+relevant context:
 ${contextSection}
       `.trim()
     }
