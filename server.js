@@ -58,7 +58,7 @@ async function connectToMongoose() {
 connectToMongoose()
 
 // Vector search function
-async function searchVectorDB(query, aiKey, limit = 2) {
+async function searchVectorDB(query, aiKey, limit = 3) {
   try {
     // Get last message text from query
     const lastMessage = query[query.length - 1]
