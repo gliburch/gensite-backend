@@ -1,6 +1,6 @@
 {
   "name": "gensite-backend",
-  "version": "0.3.2",
+  "version": "0.4.0",
   "description": "생성형 AI 웹 사이트 서버",
   "author": "Kim Han-sol <studio.gliburch@gmail.com>",
   "main": "server.js",
@@ -9,6 +9,8 @@
     "embed:mbti-counsel": "AI_KEY=mbtiCounsel node scripts/embed-documents.js",
     "embed:cancer-care": "AI_KEY=cancerCare node scripts/embed-documents.js",
     "embed:settlus-ltd": "AI_KEY=settlusLtd node scripts/embed-documents.js",
+    "embed:settlus-ltd:dev": "dotenv -e .env -- npm run embed:settlus-ltd",
+    "embed:settlus-ltd:prd": "dotenv -e .env.prd -- npm run embed:settlus-ltd",
     "embed:the-minjoo-party": "AI_KEY=theMinjooParty node scripts/embed-documents.js",
     "embed:people-power-party": "AI_KEY=peoplePowerParty node scripts/embed-documents.js",
     "embed:reform-party": "AI_KEY=reformParty node scripts/embed-documents.js",
