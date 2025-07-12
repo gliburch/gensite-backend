@@ -19,6 +19,7 @@ import Analysis from './models/Analysis.js'
 import luckyBeach from './ai.lucky-beach.js'
 import mbtiCounsel from './ai.mbti-counsel.js'
 import cancerCare from './ai.cancer-care.js'
+import settlusLtd from './ai.settlus-ltd.js'
 import theMinjooParty from './ai.the-minjoo-party.js'
 import peoplePowerParty from './ai.people-power-party.js'
 import reformParty from './ai.reform-party.js'
@@ -28,6 +29,7 @@ const AI_CONFIGS = {
   'luckyBeach': luckyBeach.CONFIG,
   'mbtiCounsel': mbtiCounsel.CONFIG,
   'cancerCare': cancerCare.CONFIG,
+  'settlusLtd': settlusLtd.CONFIG,
   'theMinjooParty': theMinjooParty.CONFIG,
   'peoplePowerParty': peoplePowerParty.CONFIG,
   'reformParty': reformParty.CONFIG,
@@ -56,7 +58,7 @@ async function connectToMongoose() {
 connectToMongoose()
 
 // Vector search function
-async function searchVectorDB(query, aiKey, limit = 2) {
+async function searchVectorDB(query, aiKey, limit = 3) {
   try {
     // Get last message text from query
     const lastMessage = query[query.length - 1]
@@ -257,8 +259,9 @@ fastify.post('/messages', async function handler (request, reply) {
       enhancedSystemPrompt = `
 ${baseSystemPrompt}
 
-The following information is relevant to the conversation. When answering the user, incorporate this information naturally without explicitly mentioning that it comes from a knowledge base:
+The following information is relevant to the conversation. When answering the user, incorporate this information naturally without explicitly mentioning that it comes from a knowledge base.
 
+relevant context:
 ${contextSection}
       `.trim()
     }
