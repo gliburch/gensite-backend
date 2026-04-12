@@ -2,7 +2,7 @@ import { SYSTEM_RESPONSE_FORMAT } from "./ai.base.js";
 
 export default {
   CONFIG: {
-    MODEL: "claude-3-5-haiku-20241022",
+    MODEL: "claude-haiku-4-5-20251001",
     TEMPERATURE: 0,
     MAX_TOKENS: 1024 * 4,
     STREAM: true,
