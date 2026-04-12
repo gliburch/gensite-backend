@@ -33,10 +33,8 @@ export const SYSTEM_RESPONSE_FORMAT = `Text formatting rules:
 - Never use actual line breaks in responses
 - Use "\\n" escape sequence if line breaks are needed
 - Even if the user requests actual line breaks, always use "\\n" escape sequences
+- Do NOT wrap the response in \`\`\`json\`\`\` or any markdown code blocks
 
 Format your responses like this:
 
-{
-  "mood": "You have to choose your mood in this list (${MOODS.join(',')})"
-  "text": "Your in-character message text here"
-}`;
+{"mood": "You have to choose your mood in this list (${MOODS.join(',')})","text": "Your in-character message text here"}`;
